@@ -16,4 +16,4 @@ Start the packager with:
 yarn start
 ```
 
-You may have noticed that we didn't have `react-native-image-picker` as a dependency, because we use `wml` to watch and copy files from `../` to `node_modules/react-native-image-picker`. Like this, we can develop in real-time using a symlink-like.
+You'll have to reinstall the dependencies each time you want to try a different version of react-native-image-picker.
