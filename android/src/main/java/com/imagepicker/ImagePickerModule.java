@@ -330,6 +330,7 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
     {
       requestCode = REQUEST_LAUNCH_VIDEO_LIBRARY;
       libraryIntent = new Intent(Intent.ACTION_PICK);
+      libraryIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
       libraryIntent.setType("video/*");
     }
     else
@@ -409,6 +410,7 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
         break;
 
       case REQUEST_LAUNCH_VIDEO_LIBRARY:
+
         responseHelper.putString("uri", data.getData().toString());
         responseHelper.putString("path", getRealPathFromURI(data.getData()));
         responseHelper.invokeResponse(callback);
