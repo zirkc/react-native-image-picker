@@ -273,6 +273,8 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
       cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraCaptureURI);
     }
 
+
+
     if (cameraIntent.resolveActivity(reactContext.getPackageManager()) == null)
     {
       responseHelper.invokeError(callback, "Cannot launch camera");
@@ -327,24 +329,13 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
 
     int requestCode;
     Intent libraryIntent;
-    if (pickVideo)
-    {
-      requestCode = REQUEST_LAUNCH_VIDEO_LIBRARY;
-      libraryIntent = new Intent(Intent.ACTION_PICK);
-      libraryIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-      libraryIntent.setType("video/*");
-    }
-    else
-    {
-      requestCode = REQUEST_LAUNCH_IMAGE_LIBRARY;
-      libraryIntent = new Intent(Intent.ACTION_PICK,
-      MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    requestCode = REQUEST_LAUNCH_VIDEO_LIBRARY;
+    libraryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    libraryIntent.setType("*/*");
+    libraryIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*"});
+    libraryIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+    //libraryIntent.setType("image/* video/*");
 
-      if (pickBoth) 
-      {
-        libraryIntent.setType("image/* video/*");
-      }
-    }
 
     if (libraryIntent.resolveActivity(reactContext.getPackageManager()) == null)
     {
@@ -417,8 +408,12 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
 
       case REQUEST_LAUNCH_VIDEO_LIBRARY:
 
-        responseHelper.putString("uri", data.getData().toString());
-        responseHelper.putString("path", getRealPathFromURI(data.getData()));
+        String url = getRealPathFromURI(data.getData());
+        if(!url.toLowerCase().contains("file://")) {
+          url = "file://"+url;
+        }
+        responseHelper.putString("uri", url);
+        responseHelper.putString("path", url);
         responseHelper.invokeResponse(callback);
         callback = null;
         return;
